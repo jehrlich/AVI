@@ -16,7 +16,7 @@ jobs:
       - name: build web page including JSON versions of schema
         run: |
           echo 'generate ReDoc html' 
-          npx  redoc-cli bundle src/openapi.yaml -o docs/index.html
+          npx  @redocly/cli build-docs src/openapi.yaml -o docs/index.html
           echo 'generate bundled json' 
           npx  @redocly/openapi-cli bundle --output=docs/assets/openapi.json src/openapi.yaml
 
