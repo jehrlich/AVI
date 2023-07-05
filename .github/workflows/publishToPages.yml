@@ -1,0 +1,30 @@
+name: Generate dereferenced json, docs and publish to GH Pages
+on:
+  workflow_dispatch:
+  push: #when changes are pushed to default branch for the file src/openapi.yml
+    branches:
+      - main
+    paths:
+      - src/openapi.yaml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: build web page including JSON versions of schema
+        run: |
+          echo 'generate ReDoc html' 
+          npx  redoc-cli bundle src/openapi.yaml -o docs/index.html
+          echo 'generate bundled json' 
+          npx  @redocly/openapi-cli bundle --output=docs/assets/openapi.json src/openapi.yaml
+
+      - name: Publish to GH-pages
+        if: success()
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages
+          folder: docs
+          clean: false
+
