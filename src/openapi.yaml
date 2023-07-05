@@ -13,73 +13,6 @@ servers:
     url: https://doesn'tExist@AVI.ORG
 
 paths:
-  /getCase:
-    post:
-      operationId: fit_single
-      summary: Fit single lactation
-      description: >-
-        Fit a single lactation from the supplied array of  (DIM, milk weight) data pairs
-        using a default tree of Bayesian priors stratified by on breed and parity.
-      parameters:
-        - name: includePath
-          in: path
-          schema:
-            type: boolean
-            default: false
-      requestBody:
-        description: a single lactation
-        content:
-          application/json:
-            schema:
-              required:
-                - lactation
-              properties:
-                lactation:
-                  $ref: "#/components/schemas/Lactation"
-                priors:
-                  $ref: "#/components/schemas/Priors"
-        required: true
-      responses:
-        "200":
-          description: Lactation fitted
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Fit"
-        '401':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
-
-    post:
-      operationId: fit_lactations
-      summary: Fit a list of lactations.
-      description: >-
-        Fit a group of lactations returning fitted parameter values. If '**_priors_**'
-        are supplied they will be used. Otherwise fitting will be done from defaults.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              required:
-                - fittingJob
-              properties:
-                fittingJob:
-                  $ref: "#/components/schemas/FittingJob"
-        required: true
-      responses:
-        "200":
-          description: fitted parameter values for lactations
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/FittingResult"
-        '401':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Unauthorized'
   /getCase/{sourceId}/{caseId}:
     get:
       operationId: getSingeleCase
@@ -126,7 +59,6 @@ components:
       required:
         - caseId
       type: object
-
       properties:
         caseId: 
           type: string
@@ -139,3 +71,50 @@ components:
           default: ""
           example: Fluffy
       description: Patient answers to this name.
+    Case:
+      description: A **_Case_** records use of a **_Prescription_** on an individual animal or group
+      type: object
+      required:
+        - id
+        - animalId
+        - initiationTime
+      properties:
+        id:
+          description: Case ID number
+          type: integer
+          format: int64
+          default: null
+          example: 123
+        animalId:
+          type: string
+          example: Bossie34
+        initiationTime:
+          type: string
+          format: date-time
+        note:
+          type: string
+    Error:
+      type: object
+      description: error response per RFC 7807
+      required: [title, status]
+      properties:
+        errorType:
+          type: string
+          description: the type of error
+          example: Duplicate entry 'entered' for key 'fieldname'
+        title:
+          type: string
+          description: A brief, human-readable message about the error
+          example: Processing Error
+        status:
+          type: integer
+          description: HTTP status code
+          example: 400
+        detail:
+          type: string
+          description: a human-readable description of the specific error
+          example: java.sql.SQLIntegrityConstraintViolationException
+        instance:
+          type: string
+          description: a URI that identifies the specific occurrence of the error
+          example: /login/log/abc123
