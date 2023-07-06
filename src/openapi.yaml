@@ -71,7 +71,51 @@ components:
           default: ""
           example: Fluffy
       description: Patient answers to this name.
-    Case:
+    address:
+      type: object
+      required:
+        - city
+        - state
+        - zip
+        - street1
+      properties:
+        city: 
+          type: string
+          example:  Anytown
+        state: 
+          type: string
+          example:  NY
+        zip: 
+          type: string
+          example:  12345
+        strteet1: 
+          type: string
+          example:  22 Main St.
+        street2: 
+          type: string
+          example:  Apartment 2B          
+      description: A mailing address.
+    practice:
+      type: object
+      required:
+        - practiceId
+        - name
+      properties:
+        practiceId:
+          type: string
+          description:  C&F practice identifier
+        name:
+         type: string
+        phoneNumber:
+          type: string
+        faxNumber:
+          type: string
+        email:  
+          type: string
+          format: email
+        address:
+          $ref: "#/components/schemas/address" 
+    case:
       description: A **_Case_** records use of a **_Prescription_** on an individual animal or group
       type: object
       required:
