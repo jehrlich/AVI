@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: AVI Standards of Veterinary Interoperabiity
   description: |
-    ## This is a description of the project. Like all OAS description fields it can contain HTML    equation<br><br> ((1 - E^((offset - t)/ramp)/2)*scale)/E^(decay X t)
+    ## This is a description of the project. Like all OAS description fields it can contain HTML
   termsOfService: link to a terms-of-service page
   contact:
     name: Site Maintainer
@@ -18,7 +18,7 @@ paths:
       operationId: getSingeleCase
       summary: Get Case data from a source by caseId 
       description: >-
-        Get the default Priors that will be used if an alternative is not supplied by the user
+        Get case data.
       parameters:
         - name: sourceId
           in: path
