@@ -1,0 +1,171 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "AVI Standards of Veterinary Interoperabiity",
+    "description": "## This is a description of the project. Like all OAS description fields it can contain HTML    equation<br><br> ((1 - E^((offset - t)/ramp)/2)*scale)/E^(decay X t)\n",
+    "termsOfService": "link to a terms-of-service page",
+    "contact": {
+      "name": "Site Maintainer",
+      "email": "standards@AVI.ORG"
+    },
+    "version": "0.1.1"
+  },
+  "servers": [
+    {
+      "description": "this would be a server set up as a reference implementation",
+      "url": "https://doesn'tExist@AVI.ORG"
+    }
+  ],
+  "paths": {
+    "/getCase/{sourceId}/{caseId}": {
+      "get": {
+        "operationId": "getSingeleCase",
+        "summary": "Get Case data from a source by caseId",
+        "description": "Get the default Priors that will be used if an alternative is not supplied by the user",
+        "parameters": [
+          {
+            "name": "sourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Case Data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Case"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Unauthorized": {
+        "description": "User lacks a required permission"
+      },
+      "BadRequest": {
+        "description": "The server could not understand the request due to invalid syntax.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The server can not find the requested resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Patient": {
+        "required": [
+          "caseId"
+        ],
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of patient",
+            "example": "kergjq0o49gnqwi4t564jh489j"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of patient",
+            "default": "",
+            "example": "Fluffy"
+          }
+        },
+        "description": "Patient answers to this name."
+      },
+      "Case": {
+        "description": "A **_Case_** records use of a **_Prescription_** on an individual animal or group",
+        "type": "object",
+        "required": [
+          "id",
+          "animalId",
+          "initiationTime"
+        ],
+        "properties": {
+          "id": {
+            "description": "Case ID number",
+            "type": "integer",
+            "format": "int64",
+            "default": null,
+            "example": 123
+          },
+          "animalId": {
+            "type": "string",
+            "example": "Bossie34"
+          },
+          "initiationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "description": "error response per RFC 7807",
+        "required": [
+          "title",
+          "status"
+        ],
+        "properties": {
+          "errorType": {
+            "type": "string",
+            "description": "the type of error",
+            "example": "Duplicate entry 'entered' for key 'fieldname'"
+          },
+          "title": {
+            "type": "string",
+            "description": "A brief, human-readable message about the error",
+            "example": "Processing Error"
+          },
+          "status": {
+            "type": "integer",
+            "description": "HTTP status code",
+            "example": 400
+          },
+          "detail": {
+            "type": "string",
+            "description": "a human-readable description of the specific error",
+            "example": "java.sql.SQLIntegrityConstraintViolationException"
+          },
+          "instance": {
+            "type": "string",
+            "description": "a URI that identifies the specific occurrence of the error",
+            "example": "/login/log/abc123"
+          }
+        }
+      }
+    }
+  }
+}
